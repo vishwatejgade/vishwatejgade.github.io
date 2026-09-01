@@ -517,8 +517,8 @@ function answerQ(n, choice){
 
 function pickPackage(name){
   const r = document.getElementById('reply-package');
-  document.getElementById('final-package').textContent = name === 'VIP' ? 'VIP — Madam\\'s Special' : name;
-  document.getElementById('letter-package').textContent = name === 'VIP' ? 'VIP — Madam\\'s Special' : name;
+  document.getElementById('final-package').textContent = name === 'VIP' ? "VIP — Madam's Special" : name;
+  document.getElementById('letter-package').textContent = name === 'VIP' ? "VIP — Madam's Special" : name;
   if(name==='VIP'){
     r.innerHTML = 'VIP PACKAGE SELECTED<br>Candidate has excellent taste.<br>Recommendation: Proceed immediately.';
   } else {
@@ -530,8 +530,8 @@ function pickPackage(name){
 
 function excited(choice){
   const r = document.getElementById('reply-excited');
-  if(choice==='Obviously') r.textContent = 'Good. That\\'s the answer we were looking for.';
-  if(choice==='Maybe') r.textContent = 'We\\'ll accept that as a yes.';
+  if(choice==='Obviously') r.textContent = "Good. That's the answer we were looking for.";
+  if(choice==='Maybe') r.textContent = "We'll accept that as a yes.";
   if(choice==='Refuse') r.textContent = 'Classic StuntMan.';
   r.classList.add('show');
   document.getElementById('secret-next').style.display='flex';

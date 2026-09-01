@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Appointment Commission — Official Notice</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper: #efe9da;
+    --paper-dim: #e5dcc6;
+    --ink: #1c2621;
+    --ink-soft: #3c463f;
+    --seal: #8b2a2a;
+    --gold: #a98037;
+    --line: #c9bfa0;
+    --white: #ffffff;
+    --charcoal: #2a2a2a;
+    --flower: #b98aa0;
+    --flower-soft: #e9d7de;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Source Serif 4', Georgia, serif;
+    min-height:100vh;
+    display:flex;
+    align-items:flex-start;
+    justify-content:center;
+    -webkit-font-smoothing:antialiased;
+  }
+  body.white-mode{background:var(--white); color:var(--charcoal);}
+  .stage{
+    width:100%;
+    max-width:520px;
+    min-height:100vh;
+    padding:36px 24px 60px;
+    position:relative;
+  }
+  .screen{display:none;}
+  .screen.active{display:block; animation:rise .5s ease both;}
+  @keyframes rise{from{opacity:0; transform:translateY(10px);} to{opacity:1; transform:translateY(0);}}
+  @media (prefers-reduced-motion: reduce){
+    .screen.active{animation:none;}
+  }
+
+  .stamp-head{
+    font-family:'Special Elite', monospace;
+    letter-spacing:.03em;
+    font-size:12px;
+    color:var(--ink-soft);
+    border:1px solid var(--line);
+    padding:8px 12px;
+    display:inline-block;
+    margin-bottom:28px;
+  }
+  h1{
+    font-family:'Special Elite', monospace;
+    font-weight:400;
+    font-size:22px;
+    line-height:1.4;
+    margin:0 0 18px;
+    color:var(--ink);
+  }
+  h2{
+    font-family:'Special Elite', monospace;
+    font-weight:400;
+    font-size:17px;
+    margin:0 0 14px;
+  }
+  p{ font-size:16px; line-height:1.6; margin:0 0 14px; color:var(--ink-soft);}
+  .doc{
+    background:var(--paper-dim);
+    border:1px solid var(--line);
+    padding:22px 20px;
+    margin-bottom:22px;
+  }
+  .doc dl{margin:0; font-size:15px;}
+  .doc dt{font-family:'Special Elite', monospace; font-size:11px; color:var(--gold); margin-top:10px;}
+  .doc dt:first-child{margin-top:0;}
+  .doc dd{margin:2px 0 0; color:var(--ink);}
+  ul.plain{padding-left:18px; margin:0 0 14px; color:var(--ink-soft);}
+  ul.plain li{margin-bottom:6px;}
+
+  .btn-row{display:flex; flex-direction:column; gap:10px; margin-top:22px;}
+  .btn-row.pair{flex-direction:row;}
+  button{
+    font-family:'Source Serif 4', serif;
+    font-size:15px;
+    padding:13px 18px;
+    border:1px solid var(--ink);
+    background:transparent;
+    color:var(--ink);
+    cursor:pointer;
+    transition:background .15s ease, color .15s ease;
+    flex:1;
+  }
+  button:hover{background:var(--ink); color:var(--paper);}
+  button:focus-visible{outline:2px solid var(--seal); outline-offset:2px;}
+  button.primary{background:var(--seal); border-color:var(--seal); color:var(--white);}
+  button.primary:hover{background:#6f2020;}
+  button.gold{border-color:var(--gold); color:var(--gold);}
+  button.gold:hover{background:var(--gold); color:var(--white);}
+
+  .reply{
+    font-family:'Special Elite', monospace;
+    font-size:13px;
+    color:var(--seal);
+    border-left:2px solid var(--seal);
+    padding-left:10px;
+    margin:16px 0;
+    display:none;
+  }
+  .reply.show{display:block; animation:rise .35s ease both;}
+
+  .q{margin-bottom:8px;}
+  .opt{
+    display:block;
+    width:100%;
+    text-align:left;
+    margin-bottom:8px;
+  }
+
+  .package{
+    border:1px solid var(--line);
+    padding:18px;
+    margin-bottom:16px;
+    background:var(--paper-dim);
+  }
+  .package.vip{border-color:var(--gold);}
+  .package h3{font-family:'Special Elite', monospace; font-size:15px; margin:0 0 8px; color:var(--ink);}
+  .package ul{margin:0 0 14px; padding-left:18px; color:var(--ink-soft); font-size:15px;}
+  .package button{width:100%;}
+
+  /* loading screen */
+  #screen-loading{
+    display:flex;
+    min-height:calc(100vh - 96px);
+    flex-direction:column;
+    justify-content:center;
+  }
+  #screen-loading.active{display:flex;}
+  .term{
+    font-family:'Special Elite', monospace;
+    font-size:13px;
+    color:#8fae94;
+    background:#0d1410;
+    padding:22px;
+    line-height:2;
+    border:1px solid #2a352c;
+  }
+  .term .line{opacity:0; animation:fadein .4s ease forwards;}
+  @keyframes fadein{to{opacity:1;}}
+  .cursor{display:inline-block; width:8px; height:14px; background:#8fae94; vertical-align:middle; animation:blink 1s steps(1) infinite;}
+  @keyframes blink{50%{opacity:0;}}
+  .locked-note{color:#5c6b5f; font-size:12px; margin-top:14px;}
+
+  /* white emotional section */
+  .white-screen{
+    min-height:calc(100vh - 96px);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+  }
+  .flower{width:64px; height:64px; margin-bottom:36px;}
+  .white-screen p.line{
+    font-size:18px;
+    line-height:1.9;
+    color:var(--charcoal);
+    max-width:360px;
+    margin:0 auto 20px;
+    opacity:0;
+    animation:fadein 1s ease forwards;
+  }
+  .white-screen .cont-btn{
+    margin-top:20px;
+    border-color:var(--charcoal);
+    color:var(--charcoal);
+    background:none;
+  }
+  .white-screen .cont-btn:hover{background:var(--charcoal); color:var(--white);}
+
+  .letter{
+    border:2px solid var(--ink);
+    padding:26px 20px;
+    font-family:'Special Elite', monospace;
+    font-size:13px;
+    line-height:1.9;
+    background:var(--paper-dim);
+  }
+  .letter h2{font-size:15px; text-align:center; margin-bottom:18px;}
+  .letter .row{display:flex; justify-content:space-between; gap:10px; border-bottom:1px dotted var(--line); padding:4px 0;}
+  .letter .check{margin:3px 0;}
+  .letter .status{color:var(--seal); font-weight:bold;}
+  .letter .sig{margin-top:20px; font-style:italic; font-family:'Source Serif 4', serif;}
+
+  .egg-btn{
+    font-family:'Special Elite', monospace;
+    font-size:11px;
+    color:#bbb;
+    background:none;
+    border:none;
+    margin-top:40px;
+    cursor:pointer;
+    padding:6px;
+  }
+  .egg-btn:hover{color:var(--seal); background:none;}
+  .classified{
+    margin-top:16px;
+    border:1px dashed var(--seal);
+    padding:16px;
+    font-family:'Special Elite', monospace;
+    font-size:13px;
+    color:var(--seal);
+    display:none;
+    text-align:left;
+  }
+  .classified.show{display:block; animation:rise .4s ease both;}
+</style>
+</head>
+<body>
+<div class="stage">
+
+  <!-- 01 LOADING -->
+  <section class="screen active" id="screen-loading">
+    <div class="term" id="term">
+      <div class="line" style="animation-delay:.1s">APPOINTMENT COMMISSION OF INDIA</div>
+      <div class="line" style="animation-delay:.6s">Initializing secure connection...</div>
+      <div class="line" style="animation-delay:1.2s">Verifying candidate...</div>
+      <div class="line" style="animation-delay:1.8s">Access granted.<span class="cursor"></span></div>
+    </div>
+    <p class="locked-note">CONFIDENTIAL — AUTHORIZED PERSONNEL ONLY</p>
+    <div class="btn-row"><button class="primary" onclick="go('screen-id')">ENTER</button></div>
+  </section>
+
+  <!-- 02 CANDIDATE ID -->
+  <section class="screen" id="screen-id">
+    <div class="stamp-head">FILE NO. SM/2026/PUNE</div>
+    <h1>Candidate Identification</h1>
+    <div class="doc">
+      <dl>
+        <dt>Name</dt><dd>STUNTMAN</dd>
+        <dt>Classification</dt><dd>Extremely Unpredictable</dd>
+        <dt>Category</dt><dd>VIP</dd>
+        <dt>Known For</dt><dd>Doing StuntMan things</dd>
+        <dt>Current Assignment</dt><dd>UPSC Preparation</dd>
+        <dt>Appointment Status</dt><dd>Pending</dd>
+      </dl>
+    </div>
+    <p>Are you STUNTMAN?</p>
+    <div class="reply" id="reply-who">ACCESS DENIED.<br>Nice try, StuntMan.</div>
+    <div class="btn-row">
+      <button class="primary" onclick="go('screen-notice')">YES, THAT'S ME</button>
+      <button onclick="denyWho()">WHO IS STUNTMAN?</button>
+    </div>
+  </section>
+
+  <!-- 03 OFFICIAL NOTICE -->
+  <section class="screen" id="screen-notice">
+    <div class="stamp-head">SPECIAL APPOINTMENT NOTICE — 2026</div>
+    <h1>Dear Candidate,</h1>
+    <p>You have been shortlisted for a high-priority appointment in Pune.</p>
+    <div class="doc">
+      <dl>
+        <dt>Date</dt><dd>02 September 2026</dd>
+        <dt>Location</dt><dd>Pune</dd>
+        <dt>Priority</dt><dd>Extremely High</dd>
+        <dt>Duration</dt><dd>To be determined by the candidate</dd>
+      </dl>
+    </div>
+    <p>Failure to attend may result in severe consequences including:</p>
+    <ul class="plain">
+      <li>Excessive missing-you charges</li>
+      <li>Friendship complaints</li>
+      <li>Unnecessary teasing</li>
+      <li>Possible ice-cream related penalties</li>
+    </ul>
+    <p>Do you wish to proceed with the appointment?</p>
+    <div class="reply" id="reply-upsc">REASON ACCEPTED.<br>Unfortunately, the Appointment Commission has decided that this matter is more important.<br>UPSC preparation will resume after the appointment.</div>
+    <div class="btn-row">
+      <button class="primary" id="btn-notice-proceed" onclick="go('screen-assess')">YES, PROCEED</button>
+      <button id="btn-notice-upsc" onclick="denyUpsc()">I HAVE UPSC PREPARATION</button>
+    </div>
+  </section>
+
+  <!-- 04 ASSESSMENT -->
+  <section class="screen" id="screen-assess">
+    <div class="stamp-head">PRE-APPOINTMENT ASSESSMENT</div>
+    <h1>Please answer honestly.</h1>
+    <p>Your responses may be used against you.</p>
+
+    <div class="doc" id="q1box">
+      <h2 class="q">1. How long has it been since we properly met?</h2>
+      <button class="opt" onclick="answerQ(1,'A')">A. Too long</button>
+      <button class="opt" onclick="answerQ(1,'B')">B. Way too long</button>
+      <button class="opt" onclick="answerQ(1,'C')">C. Don't remind me</button>
+      <button class="opt" onclick="answerQ(1,'D')">D. All of the above</button>
+      <div class="reply" id="r1">Correct. The Commission agrees that the delay has been unacceptable.</div>
+    </div>
+
+    <div class="doc" id="q2box" style="display:none;">
+      <h2 class="q">2. What is the primary objective of tomorrow's appointment?</h2>
+      <button class="opt" onclick="answerQ(2,'A')">A. UPSC discussion</button>
+      <button class="opt" onclick="answerQ(2,'B')">B. Serious intellectual conversation</button>
+      <button class="opt" onclick="answerQ(2,'C')">C. Catching up</button>
+      <button class="opt" onclick="answerQ(2,'D')">D. Obviously C, don't be stupid</button>
+      <div class="reply" id="r2"></div>
+    </div>
+
+    <div class="doc" id="q3box" style="display:none;">
+      <h2 class="q">3. What is the appropriate duration for this appointment?</h2>
+      <button class="opt" onclick="answerQ(3,'A')">A. 30 minutes</button>
+      <button class="opt" onclick="answerQ(3,'B')">B. 1 hour</button>
+      <button class="opt" onclick="answerQ(3,'C')">C. 2–3 hours</button>
+      <button class="opt" onclick="answerQ(3,'D')">D. As long as possible</button>
+      <div class="reply" id="r3">Excellent. Candidate demonstrates exceptional decision-making ability.</div>
+    </div>
+
+    <div class="btn-row" id="assess-next" style="display:none;">
+      <button class="primary" onclick="go('screen-packages')">CONTINUE</button>
+    </div>
+  </section>
+
+  <!-- 05 PACKAGES -->
+  <section class="screen" id="screen-packages">
+    <div class="stamp-head">SELECT YOUR APPOINTMENT PACKAGE</div>
+    <h1>Choose wisely, StuntMan.</h1>
+
+    <div class="package">
+      <h3>A — STANDARD: Civil Services Package</h3>
+      <ul><li>Chai</li><li>Catch-up</li><li>Random conversations</li><li>Mild UPSC interrogation</li></ul>
+      <button onclick="pickPackage('Standard')">SELECT</button>
+    </div>
+
+    <div class="package">
+      <h3>B — PREMIUM: Best Friend Package</h3>
+      <ul><li>Everything in Standard</li><li>Unlimited nonsense</li><li>Old memories</li><li>Making fun of each other</li><li>No formalities</li></ul>
+      <button onclick="pickPackage('Premium')">SELECT</button>
+    </div>
+
+    <div class="package vip">
+      <h3>C — VIP: Madam's Special</h3>
+      <ul><li>White flower</li><li>Blackcurrant ice cream</li><li>Whole day reserved exclusively for you</li></ul>
+      <p style="font-size:14px; margin-bottom:14px;">Because apparently one appointment isn't enough.</p>
+      <button class="gold" onclick="pickPackage('VIP')">SELECT VIP</button>
+    </div>
+
+    <div class="reply" id="reply-package"></div>
+  </section>
+
+  <!-- 06 SECRET QUESTION -->
+  <section class="screen" id="screen-secret">
+    <div class="stamp-head">ONE LAST QUESTION</div>
+    <h1>The Commission requires confirmation of one important detail.</h1>
+    <p>Are you actually excited to meet tomorrow?</p>
+    <div class="reply" id="reply-excited"></div>
+    <div class="btn-row">
+      <button class="primary" onclick="excited('Obviously')">Obviously</button>
+      <button onclick="excited('Maybe')">Maybe</button>
+      <button onclick="excited('Refuse')">I refuse to answer</button>
+    </div>
+    <div class="btn-row" id="secret-next" style="display:none;">
+      <button class="primary" onclick="go('screen-final')">CONTINUE</button>
+    </div>
+  </section>
+
+  <!-- 07 FINAL CONFIRMATION -->
+  <section class="screen" id="screen-final">
+    <div class="stamp-head">FINAL CONFIRMATION</div>
+    <h1>STUNTMAN</h1>
+    <p>You have been selected for:</p>
+    <div class="doc">
+      <dl>
+        <dt>Appointment</dt><dd>THE APPOINTMENT</dd>
+        <dt>Date</dt><dd>02 September 2026</dd>
+        <dt>Location</dt><dd>Pune</dd>
+        <dt>Package</dt><dd id="final-package">VIP — Madam's Special</dd>
+        <dt>Duration</dt><dd>WHOLE DAY</dd>
+      </dl>
+    </div>
+    <p>Will you attend?</p>
+    <div class="btn-row pair">
+      <button class="primary" onclick="go('screen-emotional')">YES — CONFIRM</button>
+      <button onclick="go('screen-no')">NO</button>
+    </div>
+  </section>
+
+  <!-- 08 THE NO BUTTON TROLL -->
+  <section class="screen" id="screen-no">
+    <div class="stamp-head">RESPONSE RECORDED</div>
+    <h1 id="no-heading">Are you sure?</h1>
+    <div class="btn-row pair">
+      <button class="primary" onclick="go('screen-emotional')" id="no-yes-btn">Yes</button>
+      <button onclick="noStep()" id="no-no-btn">No</button>
+    </div>
+  </section>
+
+  <!-- 09 EMOTIONAL SWITCH -->
+  <section class="screen" id="screen-emotional">
+    <div class="white-screen">
+      <svg class="flower" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <g id="flowerSvg">
+          <ellipse cx="50" cy="30" rx="12" ry="18" fill="#f3eaf0" stroke="#c9a9b8" stroke-width="1.2"/>
+          <ellipse cx="70" cy="43" rx="12" ry="18" fill="#f3eaf0" stroke="#c9a9b8" stroke-width="1.2" transform="rotate(72 70 43)"/>
+          <ellipse cx="62" cy="65" rx="12" ry="18" fill="#f3eaf0" stroke="#c9a9b8" stroke-width="1.2" transform="rotate(144 62 65)"/>
+          <ellipse cx="38" cy="65" rx="12" ry="18" fill="#f3eaf0" stroke="#c9a9b8" stroke-width="1.2" transform="rotate(216 38 65)"/>
+          <ellipse cx="30" cy="43" rx="12" ry="18" fill="#f3eaf0" stroke="#c9a9b8" stroke-width="1.2" transform="rotate(288 30 43)"/>
+          <circle cx="50" cy="50" r="8" fill="#d9b64a"/>
+        </g>
+      </svg>
+      <p class="line" style="animation-delay:.2s">Okay. Jokes apart.</p>
+      <p class="line" style="animation-delay:1.4s">It's been a long time.</p>
+      <p class="line" style="animation-delay:2.6s">And I genuinely wanted tomorrow to be a little special.</p>
+      <p class="line" style="animation-delay:3.8s">So I made you an appointment.</p>
+      <p class="line" style="animation-delay:5.0s">Not because you needed one — but because I really wanted to see you.</p>
+      <p class="line" style="animation-delay:6.2s">Tomorrow. Pune. Just you, me, good food, blackcurrant ice cream, and a whole lot of catching up.</p>
+      <p class="line" style="animation-delay:7.4s; font-style:italic;">See you tomorrow, StuntMan.</p>
+      <button class="cont-btn" style="opacity:0; animation:fadein 1s ease forwards; animation-delay:8.4s;" onclick="go('screen-letter')">Continue</button>
+    </div>
+  </section>
+
+  <!-- 10 LETTER -->
+  <section class="screen" id="screen-letter">
+    <div class="letter">
+      <h2>OFFICIAL APPOINTMENT ORDER</h2>
+      <div class="row"><span>Candidate</span><span>STUNTMAN</span></div>
+      <div class="row"><span>Date</span><span>02 Sept 2026</span></div>
+      <div class="row"><span>Location</span><span>Pune</span></div>
+      <div class="row"><span>Package</span><span id="letter-package">VIP — Madam's Special</span></div>
+      <div class="row"><span>Duration</span><span>Whole Day</span></div>
+      <div class="row"><span>Status</span><span class="status">CONFIRMED</span></div>
+      <p style="margin-top:16px; font-family:'Special Elite',monospace; font-size:13px;">INCLUDED</p>
+      <div class="check">✓ White flower</div>
+      <div class="check">✓ Blackcurrant ice cream</div>
+      <div class="check">✓ Whole day reserved exclusively for you</div>
+      <div class="check">✓ Catch-up session</div>
+      <div class="check">✓ Unlimited nonsense</div>
+      <div class="check">✓ Friendship maintenance</div>
+      <div class="check">✓ UPSC discussion — only if requested</div>
+      <p style="margin-top:16px; font-family:'Special Elite',monospace; font-size:13px;">SPECIAL INSTRUCTIONS</p>
+      <p style="font-family:'Special Elite',monospace; font-size:12.5px; line-height:1.8;">Report on time. Bring your StuntMan energy. No official dress code. Don't overthink it. Just show up.</p>
+      <div class="sig">— Your extremely patient friend</div>
+    </div>
+    <div class="btn-row"><button class="primary" onclick="go('screen-done')">ACCEPT MY APPOINTMENT</button></div>
+  </section>
+
+  <!-- 11 DONE -->
+  <section class="screen" id="screen-done">
+    <div class="white-screen" style="min-height:calc(100vh - 120px);">
+      <h1 style="font-size:20px;">DONE.</h1>
+      <p class="line" style="animation-delay:.2s; opacity:1; animation:none;">Your appointment is officially confirmed.</p>
+      <p class="line" style="animation-delay:.2s; opacity:1; animation:none;">See you tomorrow.</p>
+      <p class="line" style="animation-delay:.2s; opacity:1; animation:none; font-style:italic;">— Your extremely patient friend</p>
+      <p class="line" style="animation-delay:.2s; opacity:1; animation:none; font-size:13px; color:#999;">P.S. Don't forget your UPSC preparation. It's only a one-day leave.</p>
+      <button class="egg-btn" onclick="toggleEgg()">CLASSIFIED FILE ▸</button>
+      <div class="classified" id="classified">
+        CLASSIFIED INFORMATION<br><br>
+        The real reason for this entire website:<br>
+        I missed my friend.<br>
+        That's it. Don't make it weird.<br><br>
+        — End of classified information —
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<script>
+function go(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  const target = document.getElementById(id);
+  target.classList.add('active');
+  if(id==='screen-emotional' || id==='screen-done'){
+    document.body.classList.add('white-mode');
+  } else {
+    document.body.classList.remove('white-mode');
+  }
+  window.scrollTo(0,0);
+}
+
+function denyWho(){
+  document.getElementById('reply-who').classList.add('show');
+}
+
+function denyUpsc(){
+  document.getElementById('reply-upsc').classList.add('show');
+  document.getElementById('btn-notice-proceed').textContent = 'FINE, PROCEED';
+}
+
+const q2replies = {
+  A: 'Suspicious answer detected.',
+  B: 'Suspicious answer detected.',
+  C: 'Correct.',
+  D: "Finally. Someone is being honest."
+};
+
+function answerQ(n, choice){
+  if(n===1){
+    document.getElementById('r1').classList.add('show');
+    setTimeout(()=>{ document.getElementById('q1box').style.display='none'; document.getElementById('q2box').style.display='block'; }, 900);
+  } else if(n===2){
+    const r2 = document.getElementById('r2');
+    r2.textContent = q2replies[choice];
+    r2.classList.add('show');
+    setTimeout(()=>{ document.getElementById('q2box').style.display='none'; document.getElementById('q3box').style.display='block'; }, 900);
+  } else if(n===3){
+    document.getElementById('r3').classList.add('show');
+    setTimeout(()=>{ document.getElementById('assess-next').style.display='flex'; }, 700);
+  }
+}
+
+function pickPackage(name){
+  const r = document.getElementById('reply-package');
+  document.getElementById('final-package').textContent = name === 'VIP' ? 'VIP — Madam\\'s Special' : name;
+  document.getElementById('letter-package').textContent = name === 'VIP' ? 'VIP — Madam\\'s Special' : name;
+  if(name==='VIP'){
+    r.innerHTML = 'VIP PACKAGE SELECTED<br>Candidate has excellent taste.<br>Recommendation: Proceed immediately.';
+  } else {
+    r.innerHTML = name.toUpperCase() + ' PACKAGE SELECTED.';
+  }
+  r.classList.add('show');
+  setTimeout(()=>go('screen-secret'), 1100);
+}
+
+function excited(choice){
+  const r = document.getElementById('reply-excited');
+  if(choice==='Obviously') r.textContent = 'Good. That\\'s the answer we were looking for.';
+  if(choice==='Maybe') r.textContent = 'We\\'ll accept that as a yes.';
+  if(choice==='Refuse') r.textContent = 'Classic StuntMan.';
+  r.classList.add('show');
+  document.getElementById('secret-next').style.display='flex';
+}
+
+let noCount = 0;
+const noMessages = [
+  "This decision will be permanently recorded in the official friendship database.",
+  "StuntMan, please reconsider your life choices.",
+  "Okay. Last chance."
+];
+function noStep(){
+  noCount++;
+  if(noCount <= noMessages.length){
+    document.getElementById('no-heading').textContent = noMessages[noCount-1];
+  }
+  if(noCount >= noMessages.length){
+    document.getElementById('no-no-btn').textContent = "Fine, I'll come";
+    document.getElementById('no-no-btn').onclick = ()=>{
+      document.getElementById('no-heading').textContent = 'APPOINTMENT CONFIRMED.';
+      setTimeout(()=>go('screen-emotional'), 900);
+    };
+  }
+}
+
+function toggleEgg(){
+  document.getElementById('classified').classList.toggle('show');
+}
+</script>
+</body>
+</html>

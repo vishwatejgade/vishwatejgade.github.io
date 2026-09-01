@@ -581,7 +581,7 @@ function answerQ(n, choice){
     setTimeout(()=>{ 
       document.getElementById('q1box').style.display='none'; 
       document.getElementById('q2box').style.display='block'; 
-    }, 2200);
+    }, 3000);
   } else if(n===2){
     const r2 = document.getElementById('r2');
     r2.textContent = q2replies[choice];
@@ -589,12 +589,12 @@ function answerQ(n, choice){
     setTimeout(()=>{ 
       document.getElementById('q2box').style.display='none'; 
       document.getElementById('q3box').style.display='block'; 
-    }, 2200);
+    }, 3000);
   } else if(n===3){
     document.getElementById('r3').classList.add('show');
     setTimeout(()=>{ 
       document.getElementById('assess-next').style.display='flex'; 
-    }, 2200);
+    }, 3000);
   }
 }
 
@@ -610,7 +610,7 @@ function pickPackage(name){
     r.innerHTML = name.toUpperCase() + ' PACKAGE SELECTED.';
   }
   r.classList.add('show');
-  setTimeout(()=>go('screen-secret'), 2200);
+  setTimeout(()=>go('screen-secret'), 3000);
 }
 
 function excited(choice){
@@ -621,7 +621,7 @@ function excited(choice){
   r.classList.add('show');
   setTimeout(() => {
     document.getElementById('secret-next').style.display='flex';
-  }, 1000);
+  }, 3000);
 }
 
 let noCount = 0;

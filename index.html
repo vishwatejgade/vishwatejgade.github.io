@@ -43,7 +43,6 @@
     position:relative;
   }
 
-  /* Fixed display specificity rule */
   .screen{display:none;}
   .screen.active{display:block; animation:rise .5s ease both;}
   
@@ -142,7 +141,6 @@
   .package ul{margin:0 0 14px; padding-left:18px; color:var(--ink-soft); font-size:15px;}
   .package button{width:100%;}
 
-  /* Progress Bar & Loading */
   .term{
     font-family:'Special Elite', monospace;
     font-size:13px;
@@ -175,7 +173,6 @@
   }
   .locked-note{color:#5c6b5f; font-size:12px; margin-top:10px; font-family:'Special Elite', monospace;}
 
-  /* Wax Seal Design */
   .wax-seal {
     width: 54px;
     height: 54px;
@@ -197,7 +194,6 @@
     letter-spacing: 0.05em;
   }
 
-  /* Emotional White Screen & Drawn Flower */
   .white-screen{
     min-height: calc(100vh - 120px);
     display:flex;
@@ -240,7 +236,6 @@
   }
   .white-screen .cont-btn:hover{background:var(--charcoal); color:var(--white);}
 
-  /* Torn Edge Letter */
   .letter-wrap {
     position: relative;
     filter: drop-shadow(0 4px 8px rgba(0,0,0,0.08));
@@ -475,7 +470,6 @@
   <section class="screen" id="screen-emotional">
     <div class="white-screen">
       <svg class="flower-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-        <!-- Self-drawing SVG Stem, Leaf & Flower Petals -->
         <path d="M50 95 Q50 65 50 45" />
         <path d="M50 70 Q65 65 60 55" />
         <circle cx="50" cy="40" r="6" />
@@ -544,7 +538,6 @@
 </div>
 
 <script>
-// Trigger initial progress bar load on launch
 window.addEventListener('DOMContentLoaded', () => {
   setTimeout(() => {
     const pbar = document.getElementById('pbar');
@@ -585,15 +578,23 @@ const q2replies = {
 function answerQ(n, choice){
   if(n===1){
     document.getElementById('r1').classList.add('show');
-    setTimeout(()=>{ document.getElementById('q1box').style.display='none'; document.getElementById('q2box').style.display='block'; }, 900);
+    setTimeout(()=>{ 
+      document.getElementById('q1box').style.display='none'; 
+      document.getElementById('q2box').style.display='block'; 
+    }, 2200);
   } else if(n===2){
     const r2 = document.getElementById('r2');
     r2.textContent = q2replies[choice];
     r2.classList.add('show');
-    setTimeout(()=>{ document.getElementById('q2box').style.display='none'; document.getElementById('q3box').style.display='block'; }, 900);
+    setTimeout(()=>{ 
+      document.getElementById('q2box').style.display='none'; 
+      document.getElementById('q3box').style.display='block'; 
+    }, 2200);
   } else if(n===3){
     document.getElementById('r3').classList.add('show');
-    setTimeout(()=>{ document.getElementById('assess-next').style.display='flex'; }, 700);
+    setTimeout(()=>{ 
+      document.getElementById('assess-next').style.display='flex'; 
+    }, 2200);
   }
 }
 
@@ -609,7 +610,7 @@ function pickPackage(name){
     r.innerHTML = name.toUpperCase() + ' PACKAGE SELECTED.';
   }
   r.classList.add('show');
-  setTimeout(()=>go('screen-secret'), 1100);
+  setTimeout(()=>go('screen-secret'), 2200);
 }
 
 function excited(choice){
@@ -618,7 +619,9 @@ function excited(choice){
   if(choice==='Maybe') r.textContent = "We'll accept that as a yes.";
   if(choice==='Refuse') r.textContent = 'Classic StuntMan.';
   r.classList.add('show');
-  document.getElementById('secret-next').style.display='flex';
+  setTimeout(() => {
+    document.getElementById('secret-next').style.display='flex';
+  }, 1000);
 }
 
 let noCount = 0;
@@ -636,7 +639,7 @@ function noStep(){
     document.getElementById('no-no-btn').textContent = "Fine, I'll come";
     document.getElementById('no-no-btn').onclick = ()=>{
       document.getElementById('no-heading').textContent = 'APPOINTMENT CONFIRMED.';
-      setTimeout(()=>go('screen-emotional'), 900);
+      setTimeout(()=>go('screen-emotional'), 1200);
     };
   }
 }
